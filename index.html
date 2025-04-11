@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Evidence zmrzliny</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="index.html">
+                <h1>Přehled</h1>
+            </a>
+            <a href="firma.html">
+                <h1>Firmy</h1>
+            </a>
+        </nav>
+    </header>
+
+    <div>
+        <form id="trzbaForm">
+            <input type="hidden" id="editId">
+            <label for="firma">Zákazník:</label><br>
+            <select id="firma" required>
+                <option value="">Načítání...</option>
+            </select><br><br>
+
+            <label for="datum">Datum:</label><br>
+            <input type="date" id="datum" required><br><br>
+
+            <label for="castka">Částka (Kč):</label><br>
+            <input type="number" id="castka" min="0" step="1" required><br><br>
+
+            <input type="submit" id="btn" value="Přidat tržbu">
+        </form>
+    </div>
+
+    <table class="container">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Zákazník</th>
+            <th>Datum</th>
+            <th>Částka</th>
+            <th>Upravit</th>
+          </tr>
+        </thead>
+        <tbody id="trzbyBody">
+
+        </tbody>
+      </table>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

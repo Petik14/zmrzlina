@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Vytvořit nového odběratele</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="firma.css">
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="index.html">
+                <h1>Přehled</h1>
+            </a>
+            <a href="firma.html">
+                <h1>Firmy</h1>
+            </a>
+        </nav>
+    </header>
+
+    <div>
+        <form id="formular">
+            <input type="hidden" id="editIdFirma">
+
+            <label>Přidat firmu/zákazníka</label><br><br>
+            <input type="text" id="idName" placeholder="Název"><br><br>
+
+            <input type="radio" id="idVitrina" name="type" value="Vitrína">
+            <label for="idVitrina">Vitrína</label><br>
+
+            <input type="radio" id="idMrazak" name="type" value="Mrazák" checked>
+            <label for="idMrazak">Mrazák</label><br><br>
+
+            <input type="submit" value="Přidat">
+        </form>
+        <p id="stav"></p>
+    </div>
+
+
+
+    <table class="container">
+        <thead>
+            <th>ID</th>
+            <th>Firma</th>
+            <th>Zařízení</th>
+            <th>Suma</th>
+            <th>Editace</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script src="firma.js"></script>
+</body>
+
+</html>
