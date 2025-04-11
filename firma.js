@@ -116,4 +116,3 @@ const firebaseConfig = {
   }
   
   nactiFirmy();
-  
