@@ -86,8 +86,8 @@ const firebaseConfig = {
         <td>${firma.typ}</td>
         <td>${firma.suma} Kč</td>
         <td>
-          <button onclick="zobrazEditFormFirma('${firma.id}', '${firma.nazev}', '${firma.typ}')">✏️</button>
-          <button onclick="smazFirmu('${firma.id}')">🗑️</button>
+          <button onclick="zobrazEditFormFirma('${firma.id}', '${firma.nazev}', '${firma.typ}')"style="font-size: 30px">✏️</button>
+          <button onclick="smazFirmu('${firma.id}')"style="font-size: 30px">🗑️</button>
         </td>
       `;
       tbody.appendChild(tr);

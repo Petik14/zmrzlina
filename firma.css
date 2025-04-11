@@ -22,7 +22,6 @@ nav > a {
     background-color: greenyellow;
     text-decoration: none;
     color: black;
-    
 }
 
 table,
@@ -30,7 +29,7 @@ td,
 th {
     border: 3px solid black;
     padding: 5px;
-    font-size: 20px;
+    font-size: 30px;
 }
 
 table {

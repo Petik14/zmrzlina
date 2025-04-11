@@ -106,8 +106,8 @@ async function zobrazTrzby() {
             <td>${datumFormatovane}</td>
             <td>${data.castka} Kč</td>
             <td>
-                <button onclick="zobrazEditForm('${doc.id}', '${data.firmaId}', '${data.datum}', ${data.castka})">✏️</button>
-                <button onclick="smazTrzbu('${doc.id}')">🗑️</button>
+                <button onclick="zobrazEditForm('${doc.id}', '${data.firmaId}', '${data.datum}', ${data.castka})"style="font-size: 30px">✏️</button>
+                <button onclick="smazTrzbu('${doc.id}')"style="font-size: 30px">🗑️</button>
             </td>
         `;
 
