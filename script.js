@@ -114,6 +114,11 @@ async function zobrazTrzby() {
         tbody.appendChild(tr);
         poradi++;
     });
+
+    const pocet = trzbySnapshot.size;
+
+    document.getElementById("souhrnTrzby").innerText =
+        `Záznamů: ${pocet}`;
 }
 
 // 🕓 Datum ve formátu dd. MM. yyyy

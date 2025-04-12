@@ -46,9 +46,9 @@ th{
 }
 
 div{
-    border: 3px solid blue;
+    border: 3px solid black;
     margin: 20px;
-    width: 40%;
+    width: 60%;
     margin-left: auto;
     margin-right: auto;
     background-color: cadetblue;
