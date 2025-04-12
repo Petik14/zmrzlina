@@ -82,7 +82,9 @@ async function nactiFirmy() {
     const tr = document.createElement("tr");
     tr.innerHTML = `
         <td>${index + 1}</td>
-        <td>${firma.nazev}</td>
+      <td>
+      <a href="#" onclick="zobrazDetailFirmy('${firma.id}', '${firma.nazev}')">${firma.nazev}</a>
+     </td>
         <td>${firma.typ}</td>
         <td>${firma.suma} Kč</td>
         <td>
@@ -121,6 +123,38 @@ async function smazFirmu(id) {
       alert("Chyba při mazání ❌");
     }
   }
+}
+function formatujDatum(datumString) {
+  const d = new Date(datumString);
+  const den = String(d.getDate()).padStart(2, '0');
+  const mesic = String(d.getMonth() + 1).padStart(2, '0');
+  const rok = d.getFullYear();
+  return `${den}. ${mesic}. ${rok}`;
+}
+async function zobrazDetailFirmy(firmaId, nazevFirmy) {
+  const dotaz = await db.collection("sales")
+    .where("firmaId", "==", firmaId)
+    .orderBy("datum", "desc")
+    .get();
+
+  if (dotaz.empty) {
+    document.getElementById("obsahDialogu").innerText = `Firma: ${nazevFirmy}\nNemá žádné záznamy.`;
+  } else {
+    let text = `Firma: ${nazevFirmy}\nZáznamy:\n`;
+    let celkem = 0;
+
+    dotaz.forEach(doc => {
+      const data = doc.data();
+      const datum = formatujDatum(data.datum);
+      celkem += Number(data.castka);
+      text += `• ${datum} – ${data.castka} Kč\n`;
+    });
+
+    text += `\nCelkem: ${celkem} Kč`;
+    document.getElementById("obsahDialogu").innerText = text;
+  }
+
+  document.getElementById("firmaDialog").showModal();
 }
 
 nactiFirmy();
