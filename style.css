@@ -81,3 +81,11 @@ div>p {
 tr:nth-child(2n +2) {
     background-color: lightblue;
 }
+
+td:nth-child(2){
+    font-weight: bold;
+}
+
+td:nth-child(4){
+    font-weight: bold;
+}
