@@ -101,7 +101,7 @@ async function nactiFirmy() {
 
   // Zobrazíme pod formulářem
   document.getElementById("souhrnFirmy").innerText =
-    `Záznamů: ${pocet} | Celkem: ${celkem} Kč`;
+    `Záznamů: ${pocet} \n Celkem: ${celkem} Kč`;
 }
 
 // ✏️ Předvyplnění formuláře při úpravě
