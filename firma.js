@@ -142,15 +142,17 @@ async function zobrazDetailFirmy(firmaId, nazevFirmy) {
   } else {
     let text = `Firma: ${nazevFirmy}\nZáznamy:\n`;
     let celkem = 0;
+    let pocet = 0;
 
     dotaz.forEach(doc => {
       const data = doc.data();
       const datum = formatujDatum(data.datum);
       celkem += Number(data.castka);
+      pocet++;
       text += `• ${datum} – ${data.castka} Kč\n`;
     });
 
-    text += `\nCelkem: ${celkem} Kč`;
+    text += `\nPočet položek: ${pocet}\nCelkem: ${celkem} Kč`;
     document.getElementById("obsahDialogu").innerText = text;
   }
 
