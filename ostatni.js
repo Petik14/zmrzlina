@@ -71,7 +71,7 @@ const firebaseConfig = {
   }
   
   async function smazJednotlivce(id) {
-    if (confirm("Opravdu chceš smazat tohoto jednotlivce?")) {
+    if (confirm("Opravdu chceš smazat tohoto odběratele?")) {
       try {
         await db.collection("others").doc(id).delete();
         alert("Jednotlivec smazán ✅");
@@ -90,17 +90,17 @@ const firebaseConfig = {
     const editId = document.getElementById("editIdJednotlivec").value;
   
     if (!nazev) {
-      alert("Zadej jméno jednotlivce");
+      alert("Zadej jméno odběratele");
       return;
     }
   
     try {
       if (editId) {
         await db.collection("others").doc(editId).update({ nazev });
-        alert("Jednotlivec upraven ✅");
+        alert("Odběratel upraven ✅");
       } else {
         await db.collection("others").add({ nazev });
-        alert("Jednotlivec přidán ✅");
+        alert("Odběratel přidán ✅");
       }
   
       document.getElementById("formularOstatni").reset();
@@ -123,9 +123,9 @@ const firebaseConfig = {
     const obsah = document.getElementById("obsahDialogu");
   
     if (dotaz.empty) {
-      obsah.innerText = `Jednotlivec: ${nazev}\nNemá žádné záznamy.`;
+      obsah.innerText = `Odběratel: ${nazev}\nNemá žádné záznamy.`;
     } else {
-      let text = `Jednotlivec: ${nazev}\nZáznamy:\n`;
+      let text = `Odběratel: ${nazev}\nZáznamy:\n`;
       let celkem = 0;
       let pocet = 0;
   
