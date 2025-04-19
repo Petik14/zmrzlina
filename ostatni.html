@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Jednotlivci</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="index.html">
+                <h1>Přehled</h1>
+            </a>
+            <a href="firma.html">
+                <h1>Firmy</h1>
+            </a>
+            <a href="ostatni.html">
+                <h1>Ostatní</h1>
+            </a>
+        </nav>
+    </header>
+
+    <div>
+        <form id="formularOstatni">
+            <label>Přidat odběratele</label><br><br>
+            <input type="text" id="idName" placeholder="Jméno zákazníka"><br><br>
+            <input type="submit" value="Přidat">
+            <input type="hidden" id="editIdJednotlivec">
+        </form>
+        <p id="stav"></p>
+        <div id="souhrnOstatni" style="margin-top: 1rem; font-weight: bold;text-align: center;font-size: 20px;"></div>
+    </div>
+
+    <dialog id="firmaDialog">
+        <pre id="obsahDialogu" style="white-space: pre-line;"></pre>
+        <button onclick="document.getElementById('firmaDialog').close()">Zavřít</button>
+    </dialog>
+
+
+    <p id="souhrnOstatni"></p>
+    <table class="container">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Jméno</th>
+                <th>Suma</th>
+                <th>Akce</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
+    <script src="ostatni.js"></script>
+</body>
+
+</html>

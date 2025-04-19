@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Evidence zmrzliny</title>
+    <title>Přidat tržbu</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -18,43 +18,58 @@
             <a href="firma.html">
                 <h1>Firmy</h1>
             </a>
+            <a href="ostatni.html">
+                <h1>Ostatní</h1>
+            </a>
         </nav>
     </header>
 
     <div>
+        <!-- Nový combobox pro výběr typu odběratele -->
+        <label for="typOdb">Typ odběratele:</label>
+        <select id="typOdb">
+            <option value="companies">Firma</option>
+            <option value="others">Jiný odběratel</option>
+        </select>
+
+        <!-- Formulář na zadání tržby -->
         <form id="trzbaForm">
-            <input type="hidden" id="editId">
-            <label for="firma">Zákazník:</label><br>
-            <select id="firma" required>
-                <option value="">Načítání...</option>
-            </select><br><br>
+            <label for="firma">Odběratel:</label><br>
+            <select id="firma"></select><br><br>
 
             <label for="datum">Datum:</label><br>
-            <input type="date" id="datum" required><br><br>
+            <input type="date" id="datum"><br><br>
 
-            <label for="castka">Částka (Kč):</label><br>
-            <input type="number" id="castka" min="0" step="1" required><br><br>
+            <label for="castka">Částka:</label><br>
+            <input type="number" id="castka" min="1"><br><br>
 
-            <input type="submit" id="btn" value="Přidat tržbu">
+            <input type="hidden" id="editId">
+            <input type="submit" value="Uložit">
         </form>
-        <div id="souhrnTrzby" style="margin-top: 1rem; font-weight: bold; text-align: center;  font-size: 25px;"></div>
+        <div id="souhrnTrzby" style="margin-top: 1rem; font-weight: bold;text-align: center;font-size: 20px;"></div>
     </div>
-   
+
+
+
     <table class="container">
         <thead>
-          <tr>
-            <th>#</th>
-            <th>Zákazník</th>
-            <th>Datum</th>
-            <th>Částka</th>
-            <th>Upravit</th>
-          </tr>
+            <tr>
+                <th>ID</th>
+                <th>Odběratel</th>
+                <th>Datum</th>
+                <th>Částka</th>
+                <th>Akce</th>
+            </tr>
         </thead>
-        <tbody id="trzbyBody">
+        <tbody id="trzbyBody"></tbody>
+    </table>
 
-        </tbody>
-      </table>
+    <dialog id="trzbaDialog">
+        <p id="obsahDialogu"></p>
+        <button onclick="document.getElementById('trzbaDialog').close()">Zavřít</button>
+    </dialog>
 
     <script src="script.js"></script>
 </body>
+
 </html>
