@@ -100,11 +100,16 @@ td>a {
 
 
 .statistiky {
-    padding: 50px;
+    padding: 50px 0;
     background-color: rgb(25, 123, 220);
     border: none;
     width: 100%;
+    max-width: 600px;   
+    margin: 0 auto;           
+    display: flex;
+    justify-content: center;
 }
+
 .statistiky > a{
     text-decoration: none;
 }
