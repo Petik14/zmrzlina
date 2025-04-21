@@ -64,7 +64,7 @@ const firebaseConfig = {
             borderWidth: 1
           },
           {
-            label: 'Jednotlivci',
+            label: 'Ostatní odběratelé',
             data: ostatniData,
             backgroundColor: 'rgba(255, 206, 86, 0.6)',
             borderColor: 'rgba(255, 206, 86, 1)',
@@ -77,7 +77,7 @@ const firebaseConfig = {
         plugins: {
           title: {
             display: true,
-            text: 'Měsíční tržby – firmy vs. jednotlivci',
+            text: 'Měsíční tržby – firmy vs. ostatní odběratelé',
             font: {
               size: 18
             }
