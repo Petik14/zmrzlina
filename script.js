@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("typOdb").addEventListener("change", nactiOdb);
   nactiOdb();
   zobrazTrzby();
+  pridejZmrzlinu();
 });
 
 async function nactiOdb() {
@@ -41,6 +42,7 @@ document.getElementById("trzbaForm").addEventListener("submit", async function (
   const datum = document.getElementById("datum").value;
   const castka = parseFloat(document.getElementById("castka").value);
   const editId = document.getElementById("editId").value;
+  const zmrzliny = ziskejZmrzlinyZFormulare(); // z druhy.js
 
   if (!firmaId || !datum || isNaN(castka) || castka <= 0) {
     alert("Vyplň všechna pole správně.");
@@ -49,10 +51,15 @@ document.getElementById("trzbaForm").addEventListener("submit", async function (
 
   try {
     if (editId) {
-      await db.collection("sales").doc(editId).update({ firmaId, datum, castka, typ });
+      await db.collection("sales").doc(editId).update({
+        firmaId, datum, castka, typ, zmrzliny
+      });
       alert("Tržba byla upravena ✅");
     } else {
-      await db.collection("sales").add({ firmaId, datum, castka, cas: new Date(), typ });
+      await db.collection("sales").add({
+        firmaId, datum, castka, typ, zmrzliny,
+        cas: new Date()
+      });
       alert("Tržba byla přidána ✅");
     }
 
@@ -94,15 +101,15 @@ async function zobrazTrzby() {
     tr.classList.add(data.typ === "others" ? "jednotlivec" : "firma");
 
     tr.innerHTML = `
-        <td>${poradi}</td>
-        <td>${nazev}</td>
-        <td>${datumFormatovane}</td>
-        <td>${data.castka} Kč</td>
-        <td>
-          <button onclick="zobrazEditForm('${doc.id}', '${data.firmaId}', '${data.datum}', ${data.castka}, '${typ}')" style="font-size: 30px">✏️</button>
-          <button onclick="smazTrzbu('${doc.id}')" style="font-size: 30px">🗑️</button>
-        </td>
-      `;
+      <td>${poradi}</td>
+      <td><a href="#" onclick="zobrazDetailTrzeb('${data.firmaId}', '${typ}')">${nazev}</a></td>
+      <td>${datumFormatovane}</td>
+      <td>${data.castka} Kč</td>
+      <td>
+        <button onclick="zobrazEditForm('${doc.id}', '${data.firmaId}', '${data.datum}', ${data.castka}, '${typ}')" style="font-size: 30px">✏️</button>
+        <button onclick="smazTrzbu('${doc.id}')" style="font-size: 30px">🗑️</button>
+      </td>
+    `;
 
     tbody.appendChild(tr);
     poradi++;
@@ -119,25 +126,76 @@ function formatujDatum(datumString) {
   return `${den}. ${mesic}. ${rok}`;
 }
 
-function zobrazEditForm(id, firmaId, datum, castka, typ) {
+async function zobrazEditForm(id, firmaId, datum, castka, typ) {
   document.getElementById("editId").value = id;
   document.getElementById("typOdb").value = typ;
-  nactiOdb().then(() => {
-    document.getElementById("firma").value = firmaId;
-    document.getElementById("datum").value = datum;
-    document.getElementById("castka").value = castka;
-  });
+
+  await nactiOdb();
+  document.getElementById("firma").value = firmaId;
+  document.getElementById("datum").value = datum;
+  document.getElementById("castka").value = castka;
+
+  const container = document.getElementById("zmrzlinyContainer");
+  container.innerHTML = "";
+
+  const doc = await db.collection("sales").doc(id).get();
+  const data = doc.data();
+
+  if (Array.isArray(data.zmrzliny)) {
+    for (const zmrzlina of data.zmrzliny) {
+      await pridejZmrzlinu(zmrzlina); // vše obstaráno zde
+    }
+  }
 }
 
+async function zobrazDetailTrzeb(firmaId, typ) {
+  const snapshot = await db.collection("sales")
+    .where("firmaId", "==", firmaId)
+    .where("typ", "==", typ)
+    .orderBy("datum", "desc")
+    .get();
+
+  if (snapshot.empty) {
+    alert("Žádné záznamy");
+    return;
+  }
+
+  let text = `Záznamy:\n`;
+  let celkem = 0;
+  let pocet = 0;
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+    const datum = formatujDatum(data.datum);
+    let radek = `• ${datum} – ${data.castka} Kč`;
+
+    if (Array.isArray(data.zmrzliny) && data.zmrzliny.length > 0) {
+      const popis = data.zmrzliny.map(z => `     • ${z.pocet}× ${z.prichut} (${z.typBaleni})`).join("\n");
+      radek += `\n${popis}`;
+    }
+
+    text += radek + "\n";
+    celkem += Number(data.castka);
+    pocet++;
+  });
+
+  text += `\nPočet položek: ${pocet}\nCelkem: ${celkem} Kč`;
+  alert(text);
+}
 async function smazTrzbu(id) {
   if (confirm("Opravdu chceš smazat tuto tržbu?")) {
     try {
       await db.collection("sales").doc(id).delete();
       alert("Tržba smazána 🗑️");
-      zobrazTrzby();
+      zobrazTrzby(); // obnov tabulku
     } catch (e) {
       console.error("Chyba při mazání:", e);
       alert("Chyba při mazání ❌");
     }
   }
 }
+
+window.smazTrzbu = smazTrzbu;
+window.zobrazEditForm = zobrazEditForm;
+window.zobrazDetailTrzeb = zobrazDetailTrzeb;
+

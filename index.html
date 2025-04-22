@@ -26,42 +26,59 @@
 
     <div>
         <h1 style="text-align: center;">Přidat položku</h1>
-        <!-- Nový combobox pro výběr typu odběratele -->
-        <br>
+    
+        <!-- Výběr typu odběratele -->
         <label for="typOdb">Typ odběratele:</label>
         <select id="typOdb">
             <option value="companies">Firma</option>
             <option value="others">Jiný odběratel</option>
         </select>
-
+        <br><br>
+    
         <!-- Formulář na zadání tržby -->
         <form id="trzbaForm">
             <label for="firma">Odběratel:</label><br>
             <select id="firma"></select><br><br>
-
+    
             <label for="datum">Datum:</label><br>
             <input type="date" id="datum"><br><br>
-
+    
             <label for="castka">Částka:</label><br>
             <input type="number" id="castka" min="1"><br><br>
-
+    
             <input type="hidden" id="editId">
+    
+            <!-- Dynamické přidávání zmrzlin -->
+            <hr>
+            <h3>Zmrzliny</h3>
+    
+            <div id="zmrzlinyContainer">
+                <!-- Zde se budou vkládat jednotlivé záznamy zmrzlin -->
+                <button type="button" onclick="pridejZmrzlinu()" style="padding: 10px; font-size: 16px;">➕ Přidat zmrzlinu</button>
+            </div>
+          
+    
+            <br><br>
             <input type="submit" value="Přidat položku">
         </form>
+    
         <div id="souhrnTrzby" style="margin-top: 1rem; font-weight: bold;text-align: center;font-size: 20px;"></div>
     </div>
+    
 
-
+    <!--Statistiky-->
     <div class="statistiky">
         <a href="statistiky.html">
             <input type="button" value="Zobrazit statistiky">
         </a>
     </div>
 
+    <!--Legenda-->
     <div
         style="margin-top: 1rem; margin-bottom: 0.5rem; font-size: 0.9rem;padding-top: 10px;padding-bottom: 10px;width: 100%;font-size: 16px;">
         <strong style="margin-left: 10px;">Legenda:</strong>
-        <span style="background-color: rgb(242, 83, 83); padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.5rem;">
+        <span
+            style="background-color: rgb(242, 83, 83); padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.5rem;">
             Firmy
         </span>
         <span style="background-color: white; padding: 0.2rem 0.5rem; border-radius: 4px;margin-right: 0.5rem;">
@@ -88,6 +105,7 @@
     </dialog>
 
     <script src="script.js"></script>
+    <script src="druhy.js"></script>
 </body>
 
 </html>

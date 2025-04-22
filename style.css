@@ -132,3 +132,38 @@ tr.jednotlivec {
     background-color: white;
     /* světle žlutá */
 }
+.zmrzlina-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #999;
+    background-color: #f5faff;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+  
+  .typ-baleni,
+  .prichut-select,
+  .pocet-kusu {
+    padding: 5px;
+    font-size: 15px;
+  }
+  
+  .pocet-kusu {
+    width: 80px;
+  }
+  
+  .btn-odebrat {
+    background-color: crimson;
+    color: white;
+    border: none;
+    font-size: 18px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .btn-odebrat:hover {
+    background-color: darkred;
+  }
+  
