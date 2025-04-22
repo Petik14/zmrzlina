@@ -54,7 +54,7 @@ th {
     background-color: cadetblue;
 }
 
-div {
+.hlavni {
     border: 3px solid black;
     margin: 20px;
     width: 60%;
@@ -63,12 +63,12 @@ div {
     background-color: cadetblue;
 }
 
-div>form {
+.hlavni>form {
     text-align: center;
     padding: 20px;
 }
 
-div>form>input,
+.hlavni>form>input,
 label,
 select {
     font-size: 25px;
@@ -76,7 +76,7 @@ select {
     padding: 10px;
 }
 
-div>p {
+.hlavni>p {
     text-align: center;
     font-size: 20px;
 }
