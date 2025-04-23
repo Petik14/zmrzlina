@@ -1,8 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: "Segoe UI", sans-serif;
   background-color: #f0f8ff;
-  padding: 10px;
   color: #222;
+  margin: 0;
+  padding: 1rem; /* lehké odsazení i na mobilu */
 }
 
 header nav {
@@ -222,5 +227,17 @@ dialog button {
   gap: 0.5rem;
   font-weight: 600;
   color: #003366;
+}
+
+.container-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 0 auto;
+}
+
+.container {
+  min-width: 600px; /* nebo 100%, ale bez max-content */
+  width: 100%;
+  border-collapse: collapse;
 }
 
