@@ -247,7 +247,9 @@ dialog button {
   body {
     font-size: 18px; /* větší písmo pro mobil */
   }
-
+  header{
+    width: 100%;
+  }
   table.container td, table.container th {
     padding: 12px 10px;
     font-size: 16px;
