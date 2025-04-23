@@ -80,6 +80,7 @@ async function nactiFirmy() {
 
   firmy.forEach((firma, index) => {
     const tr = document.createElement("tr");
+    tr.classList.add("firma");
     tr.innerHTML = `
         <td>${index + 1}</td>
       <td>

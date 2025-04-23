@@ -1,169 +1,226 @@
 body {
-    font-family: sans-serif;
-    background-color: dodgerblue;
-    margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f0f8ff;
+  padding: 10px;
+  color: #222;
 }
 
-header {
-    margin: 0;
-    width: 100%;
+header nav {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  background: linear-gradient(to right, #e60000, #ff4d4d);
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
 }
 
-nav {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
+header nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
-nav>a {
-    padding: 30px;
-    border: 3px solid black;
-    width: 100%;
-    text-align: center;
-    background-color: rgb(242, 83, 83);
-    text-decoration: none;
-    color: black;
-    font-size: 30px;
+.container {
+  max-width: 100%;
+  margin: auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
 }
 
-table,
-table,
-td,
-th {
-    border: 3px solid black;
-    padding: 5px;
-    font-size: 25px;
+h1 {
+  text-align: center;
+  color: #003366;
+  margin-bottom: 1rem;
+}
+
+form label {
+  font-weight: bold;
+  color: #003366;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box; 
+}
+
+button,
+.btn-lightblue,
+.btn-blue,
+.btn-dark {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.btn-blue {
+  background-color: #3baee7;
+  color: white;
+}
+
+.btn-blue:hover {
+  background-color: #2e98cc;
+}
+
+.btn-dark {
+  background-color: #00264d;
+  color: white;
+}
+
+.btn-dark:hover {
+  background-color: #001933;
+}
+
+.btn-lightblue {
+  background-color: #cceeff;
+  color: #003366;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.zmrzlina-item {
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #eaf6ff;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 15px;
 }
 
 table {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-td {
-    text-align: center;
-}
-
-td>button {
-    font-size: 20px;
-    background-color: transparent;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 th {
-    background-color: cadetblue;
+  background-color: #004080;
+  color: white;
+  padding: 10px;
 }
 
-.hlavni {
-    border: 3px solid black;
-    margin: 20px;
-    width: 60%;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: cadetblue;
+td {
+  padding: 8px;
+  text-align: center;
 }
 
-.hlavni>form {
-    text-align: center;
-    padding: 20px;
+tbody tr {
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 10px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+
 }
 
-.hlavni>form>input,
-label,
-select {
-    font-size: 25px;
-    color: darkblue;
-    padding: 10px;
+tbody tr:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.hlavni>p {
-    text-align: center;
-    font-size: 20px;
+tbody tr.firma,
+tr.firma>td>a {
+  background-color: #d6f0ff;
+  border: 1px solid #aad4ee;
+  font-weight: bold;
+  color: #003366;
 }
 
-tr:nth-child(2n +2) {
-    background-color: lightblue;
-}
-
-td:nth-child(2) {
-    font-weight: bold;
-}
-
-td:nth-child(4) {
-    font-weight: bold;
-}
-
-td>a {
-    color: black;
+tbody tr.jednotlivec,
+tr.jednotlivec>td>a {
+  background-color: #ffe6e6;
+  border: 1px solid #f5bfbf;
+  font-weight: bold;
+  color: #cc0000;
 }
 
 
-
-.statistiky {
-    padding: 50px 0;
-    background-color: rgb(25, 123, 220);
-    border: none;
-    width: 100%;
-    max-width: 600px;   
-    margin: 0 auto;           
-    display: flex;
-    justify-content: center;
+.legenda {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.statistiky > a{
-    text-decoration: none;
-}
-.statistiky>a>input {
-    padding: 20px;
-    font-size: 20px;   
-    font-weight: bold;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
+.firma-badge,
+.ostatni-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-weight: bold;
 }
 
-tr.firma {
-    background-color: rgb(242, 83, 83);
-        /* světle modrá */
+.firma-badge {
+  background-color: #d6f0ff;
+  color: #003366;
 }
 
-tr.jednotlivec {
-    background-color: white;
-    /* světle žlutá */
+.ostatni-badge {
+  background-color: #ffe6e6;
+  color: #cc0000;
 }
-.zmrzlina-item {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px;
-    border: 1px solid #999;
-    background-color: #f5faff;
-    border-radius: 6px;
-    margin-bottom: 10px;
-  }
-  
-  .typ-baleni,
-  .prichut-select,
-  .pocet-kusu {
-    padding: 5px;
-    font-size: 15px;
-  }
-  
-  .pocet-kusu {
-    width: 80px;
-  }
-  
-  .btn-odebrat {
-    background-color: crimson;
-    color: white;
-    border: none;
-    font-size: 18px;
-    padding: 4px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  .btn-odebrat:hover {
-    background-color: darkred;
-  }
-  
+
+#souhrnTrzby,
+#souhrnOstatni,
+#souhrnFirmy {
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  border: 1px solid #ffe6e6;
+}
+
+dialog {
+  border: none;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+dialog button {
+  background-color: #e60000;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.radio-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* zarovná vše doleva */
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.radio-wrapper label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #003366;
+}
+

@@ -6,64 +6,65 @@
     <title>Firmy</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-    <link rel="stylesheet" href="firma.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <header>
         <nav>
-            <a href="index.html">
-                <h1>Přehled</h1>
-            </a>
-            <a href="firma.html">
-                <h1>Firmy</h1>
-            </a>
-            <a href="ostatni.html">
-                <h1>Ostatní</h1>
-            </a>
+            <a href="index.html">Přehled</a>
+            <a href="firma.html" class="active">Firmy</a>
+            <a href="ostatni.html">Ostatní</a>
         </nav>
     </header>
 
-    <div>
-        <h1 style="text-align: center;">Přidat firmu</h1>
-        <form id="formular">
+    <main class="container">
+        <h1>Přidat firmu</h1>
+
+        <form id="formular" class="form-block">
             <input type="hidden" id="editIdFirma">
 
-            <input type="text" id="idName" placeholder="Název"><br><br>
+            <label for="idName">Název firmy:</label>
+            <input type="text" id="idName" placeholder="Název firmy" required>
 
-            <input type="radio" id="idVitrina" name="type" value="Vitrína">
-            <label for="idVitrina">Vitrína</label><br>
+            <div class="form-group">
+                <label>Typ zařízení:</label>
+                <div class="radio-wrapper">
+                    <label for="idVitrina">
+                        <input type="radio" id="idVitrina" name="type" value="Vitrína">
+                        Vitrína
+                    </label><br>
+                    <label for="idMrazak">
+                        <input type="radio" id="idMrazak" name="type" value="Mrazák" checked>
+                        Mrazák
+                    </label>
+                </div>
+            </div>
 
-            <input type="radio" id="idMrazak" name="type" value="Mrazák" checked>
-            <label for="idMrazak">Mrazák</label><br><br>
 
-            <input type="submit" value="Přidat firmu">
+            <button type="submit" class="btn btn-primary">Přidat firmu</button>
         </form>
-        <p id="stav"></p>
-        <div id="souhrnFirmy" style="margin-top: 1rem; font-weight: bold;text-align: center;font-size: 20px;"></div>
-    </div>
+
+        <div id="souhrnFirmy" class="souhrn-box"></div>
+
+        <table class="container">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Firma</th>
+                    <th>Zařízení</th>
+                    <th>Suma</th>
+                    <th>Akce</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main>
 
     <dialog id="firmaDialog" style="white-space: pre-wrap;">
         <p id="obsahDialogu"></p>
         <button onclick="document.getElementById('firmaDialog').close()">Zavřít</button>
     </dialog>
-
-
-
-
-
-    <table class="container">
-        <thead>
-            <th>#</th>
-            <th>Firma</th>
-            <th>Zařízení</th>
-            <th>Suma</th>
-            <th>Upravit</th>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
 
     <script src="firma.js"></script>
 </body>

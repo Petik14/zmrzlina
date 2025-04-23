@@ -50,6 +50,7 @@ const firebaseConfig = {
     jednotlivi.forEach((item, index) => {
       celkovaSuma += item.suma;
       const tr = document.createElement("tr");
+      tr.classList.add("jednotlivec");
       tr.innerHTML = `
         <td>${index + 1}</td>
         <td><a href="#" onclick="zobrazDetailJednotlivce('${item.id}', '${item.nazev}')">${item.nazev}</a></td>

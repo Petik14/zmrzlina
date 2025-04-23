@@ -1,113 +1,82 @@
 <!DOCTYPE html>
 <html lang="cs">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Evidence zmrzlin</title>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Evidence zmrzlin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <header>
-        <nav>
-            <a href="index.html">
-                <h1>Přehled</h1>
-            </a>
-            <a href="firma.html">
-                <h1>Firmy</h1>
-            </a>
-            <a href="ostatni.html">
-                <h1>Ostatní</h1>
-            </a>
-        </nav>
-    </header>
+  <header>
+    <nav>
+      <a href="index.html">Přehled</a>
+      <a href="firma.html">Firmy</a>
+      <a href="ostatni.html">Ostatní</a>
+    </nav>
+  </header>
 
-    <div class="hlavni">
-        <h1 style="text-align: center;">Přidat položku</h1>
+  <main class="container">
+    <h1>Přidat položku</h1>
 
+    <form id="trzbaForm">
+      <label for="typOdb">Typ odběratele:</label>
+      <select id="typOdb">
+        <option value="companies">Firma</option>
+        <option value="others">Jiný odběratel</option>
+      </select>
 
+      <label for="firma">Odběratel:</label>
+      <select id="firma"></select><br>
 
-        <!-- Formulář na zadání tržby -->
-        <form id="trzbaForm">
-            <!-- Výběr typu odběratele -->
-            <label for="typOdb">Typ odběratele:</label><br>
-            <select id="typOdb">
-                <option value="companies">Firma</option>
-                <option value="others">Jiný odběratel</option>
-            </select>
-            <br><br>
-            <label for="firma">Odběratel:</label><br>
-            <select id="firma"></select><br><br>
+      <label for="datum">Datum:</label>
+      <input type="date" id="datum">
 
-            <label for="datum">Datum:</label><br>
-            <input type="date" id="datum"><br><br>
+      <label for="castka">Částka:</label>
+      <input type="number" id="castka" min="1">
 
-            <label for="castka">Částka:</label><br>
-            <input type="number" id="castka" min="1"><br><br>
+      <input type="hidden" id="editId">
 
-            <input type="hidden" id="editId">
+      <h2>Zmrzliny</h2>
+      <div id="zmrzlinyContainer"></div>
+      <button type="button" class="btn-blue" onclick="pridejZmrzlinu()">➕ Přidat zmrzlinu</button>
 
-            <!-- Dynamické přidávání zmrzlin -->
-            <hr>
-            <h3>Zmrzliny</h3>
+      <button type="submit" class="btn-dark">💾 Přidat položku</button>
+    </form>
 
-            <div id="zmrzlinyContainer">
-                <!-- Zde se budou vkládat jednotlivé záznamy zmrzlin -->
-                <button type="button" onclick="pridejZmrzlinu()" style="padding: 10px; font-size: 16px;">➕ Přidat
-                    zmrzlinu</button><br><br>
-            </div>
-            <hr>
+    <div id="souhrnTrzby"></div>
 
-            <br><br>
-            <input type="submit" value="Přidat položku">
-        </form>
-
-        <div id="souhrnTrzby" style="margin-top: 1rem; font-weight: bold;text-align: center;font-size: 20px;border: 1px solid black;"></div>
-    </div>
-
-
-    <!--Statistiky-->
     <div class="statistiky">
-        <a href="statistiky.html">
-            <input type="button" value="Zobrazit statistiky">
-        </a>
+      <a href="statistiky.html" class="btn-lightblue">Zobrazit statistiky</a>
     </div>
 
-    <!--Legenda-->
-    <div
-        style="margin-top: 1rem; margin-bottom: 0.5rem; font-size: 0.9rem;padding-top: 10px;padding-bottom: 10px;width: 100%;font-size: 16px;">
-        <strong style="margin-left: 10px;">Legenda:</strong>
-        <span
-            style="background-color: rgb(242, 83, 83); padding: 0.2rem 0.5rem; border-radius: 4px; margin-right: 0.5rem;">
-            Firmy
-        </span>
-        <span style="background-color: white; padding: 0.2rem 0.5rem; border-radius: 4px;margin-right: 0.5rem;">
-            Ostatní
-        </span>
+    <div class="legenda">
+      <strong>Legenda:</strong>
+      <span class="firma-badge">Firmy</span>
+      <span class="ostatni-badge">Ostatní</span>
     </div>
 
-    <table class="container">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Odběratel</th>
-                <th>Datum</th>
-                <th>Částka</th>
-                <th>Akce</th>
-            </tr>
-        </thead>
-        <tbody id="trzbyBody"></tbody>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Odběratel</th>
+          <th>Datum</th>
+          <th>Částka</th>
+          <th>Akce</th>
+        </tr>
+      </thead>
+      <tbody id="trzbyBody"></tbody>
     </table>
 
     <dialog id="trzbaDialog">
-        <p id="obsahDialogu"></p>
-        <button onclick="document.getElementById('trzbaDialog').close()">Zavřít</button>
+      <p id="obsahDialogu"></p>
+      <button onclick="document.getElementById('trzbaDialog').close()">Zavřít</button>
     </dialog>
+  </main>
 
-    <script src="script.js"></script>
-    <script src="druhy.js"></script>
+  <script src="script.js"></script>
+  <script src="druhy.js"></script>
 </body>
-
 </html>
