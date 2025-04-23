@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Přidat tržbu</title>
+    <title>Evidence zmrzlin</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -26,45 +26,47 @@
 
     <div class="hlavni">
         <h1 style="text-align: center;">Přidat položku</h1>
-    
-        <!-- Výběr typu odběratele -->
-        <label for="typOdb">Typ odběratele:</label>
-        <select id="typOdb">
-            <option value="companies">Firma</option>
-            <option value="others">Jiný odběratel</option>
-        </select>
-        <br><br>
-    
+
+
+
         <!-- Formulář na zadání tržby -->
         <form id="trzbaForm">
+            <!-- Výběr typu odběratele -->
+            <label for="typOdb">Typ odběratele:</label><br>
+            <select id="typOdb">
+                <option value="companies">Firma</option>
+                <option value="others">Jiný odběratel</option>
+            </select>
+            <br><br>
             <label for="firma">Odběratel:</label><br>
             <select id="firma"></select><br><br>
-    
+
             <label for="datum">Datum:</label><br>
             <input type="date" id="datum"><br><br>
-    
+
             <label for="castka">Částka:</label><br>
             <input type="number" id="castka" min="1"><br><br>
-    
+
             <input type="hidden" id="editId">
-    
+
             <!-- Dynamické přidávání zmrzlin -->
             <hr>
             <h3>Zmrzliny</h3>
-    
+
             <div id="zmrzlinyContainer">
                 <!-- Zde se budou vkládat jednotlivé záznamy zmrzlin -->
-                <button type="button" onclick="pridejZmrzlinu()" style="padding: 10px; font-size: 16px;">➕ Přidat zmrzlinu</button>
+                <button type="button" onclick="pridejZmrzlinu()" style="padding: 10px; font-size: 16px;">➕ Přidat
+                    zmrzlinu</button><br><br>
             </div>
-          
-    
+            <hr>
+
             <br><br>
             <input type="submit" value="Přidat položku">
         </form>
-    
-        <div id="souhrnTrzby" style="margin-top: 1rem; font-weight: bold;text-align: center;font-size: 20px;"></div>
+
+        <div id="souhrnTrzby" style="margin-top: 1rem; font-weight: bold;text-align: center;font-size: 20px;border: 1px solid black;"></div>
     </div>
-    
+
 
     <!--Statistiky-->
     <div class="statistiky">
