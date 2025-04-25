@@ -66,6 +66,7 @@ document.getElementById("trzbaForm").addEventListener("submit", async function (
     document.getElementById("trzbaForm").reset();
     document.getElementById("datum").value = new Date().toISOString().split("T")[0];
     document.getElementById("editId").value = "";
+    document.getElementById("zmrzlinyContainer").innerHTML = ""; 
     zobrazTrzby();
   } catch (e) {
     console.error("Chyba při ukládání:", e);
@@ -160,28 +161,22 @@ async function zobrazDetailTrzeb(firmaId, typ) {
     return;
   }
 
-  let text = `Záznamy:\n`;
-  let celkem = 0;
-  let pocet = 0;
+  let text = `Zmrzliny:\n`;
 
   snapshot.forEach(doc => {
     const data = doc.data();
-    const datum = formatujDatum(data.datum);
-    let radek = `• ${datum} – ${data.castka} Kč`;
 
-    if (Array.isArray(data.zmrzliny) && data.zmrzliny.length > 0) {
-      const popis = data.zmrzliny.map(z => `     • ${z.pocet}× ${z.prichut} (${z.typBaleni})`).join("\n");
-      radek += `\n${popis}`;
+    if (Array.isArray(data.zmrzliny)) {
+      data.zmrzliny.forEach(z => {
+        text += `• ${z.typBaleni} – ${z.prichut} × ${z.pocet} ks\n`;
+      });
     }
-
-    text += radek + "\n";
-    celkem += Number(data.castka);
-    pocet++;
   });
 
-  text += `\nPočet položek: ${pocet}\nCelkem: ${celkem} Kč`;
   alert(text);
 }
+
+
 async function smazTrzbu(id) {
   if (confirm("Opravdu chceš smazat tuto tržbu?")) {
     try {
