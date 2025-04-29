@@ -13,14 +13,28 @@
 <body>
   <header>
     <nav>
-      <a href="index.html"><h1>Zpět na přehled</h1></a>
+      <a href="index.html">
+        <h1>Zpět na přehled</h1>
+      </a>
     </nav>
   </header>
 
   <h2 style="text-align:center;">📊 Měsíční tržby</h2>
   <canvas id="grafTrzeb" width="400" height="200"></canvas>
 
+  <div class="charts-container">
+    <canvas id="chart_120 ml"></canvas>
+    <canvas id="chart_460 ml"></canvas>
+    <canvas id="chart_Ballada 2,2 l"></canvas>
+    <canvas id="chart_Ballada 4,5 l"></canvas>
+    <canvas id="chart_Sorbet 300 ml"></canvas>
+    <canvas id="chart_Nanuk"></canvas>
+  </div>
+
+
   <script src="statistiky.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </body>
 
 </html>

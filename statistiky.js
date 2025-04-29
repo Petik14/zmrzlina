@@ -96,3 +96,69 @@ const firebaseConfig = {
       }
     });
   });
+
+  async function vygenerujGrafy() {
+    const snapshot = await db.collection("sales").get();
+    const statistiky = {};
+  
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      if (Array.isArray(data.zmrzliny)) {
+        data.zmrzliny.forEach(z => {
+          const typ = z.typBaleni;
+          const prichut = z.prichut;
+          const pocet = z.pocet;
+  
+          if (!statistiky[typ]) statistiky[typ] = {};
+          if (!statistiky[typ][prichut]) statistiky[typ][prichut] = 0;
+          statistiky[typ][prichut] += pocet;
+        });
+      }
+    });
+  
+    const typy = [
+      "120 ml",
+      "460 ml",
+      "Ballada 2,2 l",
+      "Ballada 4,5 l",
+      "Sorbet 300 ml",
+      "Nanuk"
+    ];
+  
+    typy.forEach(typ => {
+      const data = statistiky[typ] || {};
+      const prichute = Object.keys(data);
+      const hodnoty = prichute.map(p => data[p]);
+  
+      const ctx = document.getElementById(`chart_${typ.replaceAll(".", "")}`);
+      if (!ctx) return;
+  
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: prichute,
+          datasets: [{
+            label: `Zmrzliny ${typ}`,
+            data: hodnoty,
+            backgroundColor: "rgba(54, 162, 235, 0.6)"
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            title: {
+              display: true,
+              text: `Nejoblíbenější příchutě – ${typ}`
+            }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    });
+  }
+  
+  document.addEventListener("DOMContentLoaded", vygenerujGrafy);
+  

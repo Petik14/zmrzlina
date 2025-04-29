@@ -66,7 +66,9 @@ document.getElementById("trzbaForm").addEventListener("submit", async function (
     document.getElementById("trzbaForm").reset();
     document.getElementById("datum").value = new Date().toISOString().split("T")[0];
     document.getElementById("editId").value = "";
-    document.getElementById("zmrzlinyContainer").innerHTML = ""; 
+    document.getElementById("zmrzlinyContainer").innerHTML = "";
+    //document.getElementById("odeslaniTlacitko").value = "Přidat položku"; // vrátit zpět tlačítko
+
     zobrazTrzby();
   } catch (e) {
     console.error("Chyba při ukládání:", e);
@@ -103,7 +105,7 @@ async function zobrazTrzby() {
 
     tr.innerHTML = `
       <td>${poradi}</td>
-      <td><a href="#" onclick="zobrazDetailTrzeb('${data.firmaId}', '${typ}')">${nazev}</a></td>
+      <td><a href="#" onclick="zobrazDetailTrzeb(event, '${data.firmaId}', '${typ}')">${nazev}</a></td>
       <td>${datumFormatovane}</td>
       <td>${data.castka} Kč</td>
       <td>
@@ -144,12 +146,28 @@ async function zobrazEditForm(id, firmaId, datum, castka, typ) {
 
   if (Array.isArray(data.zmrzliny)) {
     for (const zmrzlina of data.zmrzliny) {
-      await pridejZmrzlinu(zmrzlina); // vše obstaráno zde
+      await pridejZmrzlinu(zmrzlina);
     }
   }
+
+  // 🛠️ Získáme název odběratele z comboboxu
+  const selectFirma = document.getElementById("firma");
+  const vybranyNazev = selectFirma.options[selectFirma.selectedIndex].textContent;
+
+  const d = new Date(datum);
+  const datumFormatovane = `${String(d.getDate()).padStart(2, '0')}.${String(d.getMonth() + 1).padStart(2, '0')}.${d.getFullYear()}`;
+
+
+  // 🛠️ Ukážeme alert s názvem
+  alert(`Upravuješ položku: ${vybranyNazev} : ${datumFormatovane}`);
+  
+  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-async function zobrazDetailTrzeb(firmaId, typ) {
+
+async function zobrazDetailTrzeb(event, firmaId, typ) {
+  if (event) event.preventDefault(); // zabrání skoku nahoru
+
   const snapshot = await db.collection("sales")
     .where("firmaId", "==", firmaId)
     .where("typ", "==", typ)
@@ -165,7 +183,6 @@ async function zobrazDetailTrzeb(firmaId, typ) {
 
   snapshot.forEach(doc => {
     const data = doc.data();
-
     if (Array.isArray(data.zmrzliny)) {
       data.zmrzliny.forEach(z => {
         text += `• ${z.typBaleni} – ${z.prichut} × ${z.pocet} ks\n`;
@@ -175,6 +192,7 @@ async function zobrazDetailTrzeb(firmaId, typ) {
 
   alert(text);
 }
+
 
 
 async function smazTrzbu(id) {
