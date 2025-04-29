@@ -1,40 +1,38 @@
 <!DOCTYPE html>
 <html lang="cs">
-
 <head>
   <meta charset="UTF-8" />
   <title>Statistiky tržeb</title>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="statistiky.css">
+  <link rel="stylesheet" href="statistiky.css" />
 </head>
-
 <body>
   <header>
     <nav>
-      <a href="index.html">
-        <h1>Zpět na přehled</h1>
-      </a>
+      <a href="index.html"><h1>Zpět na přehled</h1></a>
     </nav>
   </header>
 
   <h2 style="text-align:center;">📊 Měsíční tržby</h2>
-  <canvas id="grafTrzeb" width="400" height="200"></canvas>
+
+  <div style="text-align: center; margin-bottom: 20px;">
+    <label for="rokSelect">Vyber rok: </label>
+    <input type="number" id="rokSelect" min="2020" max="2100" />
+  </div>
+
+  <canvas id="grafTrzeb"></canvas>
 
   <div class="charts-container">
-    <canvas id="chart_120 ml"></canvas>
-    <canvas id="chart_460 ml"></canvas>
-    <canvas id="chart_Ballada 2,2 l"></canvas>
-    <canvas id="chart_Ballada 4,5 l"></canvas>
-    <canvas id="chart_Sorbet 300 ml"></canvas>
+    <canvas id="chart_120ml"></canvas>
+    <canvas id="chart_460ml"></canvas>
+    <canvas id="chart_Ballada22l"></canvas>
+    <canvas id="chart_Ballada45l"></canvas>
+    <canvas id="chart_Sorbet300ml"></canvas>
     <canvas id="chart_Nanuk"></canvas>
   </div>
 
-
   <script src="statistiky.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 </body>
-
 </html>
