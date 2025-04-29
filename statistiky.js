@@ -157,4 +157,32 @@ async function zobrazGrafyZaRok(rok) {
       }
     });
   });
+
+  // Vygeneruj přehledovou tabulku – spojíme vše do jednoho pole
+  const rows = [];
+
+  Object.entries(statistiky).forEach(([typ, prichuteObj]) => {
+    Object.entries(prichuteObj).forEach(([prichut, pocet]) => {
+      rows.push({ typ, prichut, pocet });
+    });
+  });
+
+  // Seřadíme podle počtu kusů (sestupně)
+  rows.sort((a, b) => b.pocet - a.pocet);
+
+  // Vyplníme tabulku
+  const tabulkaBody = document.querySelector("#vitezoveTabulka tbody");
+  tabulkaBody.innerHTML = "";
+
+  rows.forEach(row => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.typ}</td>
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.prichut}</td>
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.pocet}</td>
+      `;
+
+    tabulkaBody.appendChild(tr);
+  });
 }
