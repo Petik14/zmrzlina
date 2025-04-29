@@ -158,31 +158,44 @@ async function zobrazGrafyZaRok(rok) {
     });
   });
 
-  // Vygeneruj přehledovou tabulku – spojíme vše do jednoho pole
+  // Vyplníme tabulku
+  // Připravíme řádky do tabulky
   const rows = [];
+  for (const typ in statistiky) {
+    for (const prichut in statistiky[typ]) {
+      rows.push({
+        typ: typ,
+        prichut: prichut,
+        pocet: statistiky[typ][prichut]
+      });
+    }
+  }
 
-  Object.entries(statistiky).forEach(([typ, prichuteObj]) => {
-    Object.entries(prichuteObj).forEach(([prichut, pocet]) => {
-      rows.push({ typ, prichut, pocet });
-    });
-  });
-
-  // Seřadíme podle počtu kusů (sestupně)
+  // Seřadíme od nejprodávanější
   rows.sort((a, b) => b.pocet - a.pocet);
 
   // Vyplníme tabulku
   const tabulkaBody = document.querySelector("#vitezoveTabulka tbody");
   tabulkaBody.innerHTML = "";
 
+  let celkem = 0;
+
   rows.forEach(row => {
     const tr = document.createElement("tr");
-
     tr.innerHTML = `
-        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.typ}</td>
-        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.prichut}</td>
-        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.pocet}</td>
-      `;
-
+    <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.typ}</td>
+    <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.prichut}</td>
+    <td style="padding: 6px 10px; border-bottom: 1px solid #ccc; text-align: right;">${row.pocet}</td>
+  `;
     tabulkaBody.appendChild(tr);
+    celkem += row.pocet;
   });
+
+  // Přidáme součtový řádek
+  const soucetTr = document.createElement("tr");
+  soucetTr.innerHTML = `
+  <td colspan="2" style="padding: 10px; font-weight: bold; border-top: 2px solid #000;">Podtrženo, sečteno:</td>
+  <td style="padding: 10px; font-weight: bold; border-top: 2px solid #000; text-align: right;">${celkem}</td>
+`;
+  tabulkaBody.appendChild(soucetTr);
 }
