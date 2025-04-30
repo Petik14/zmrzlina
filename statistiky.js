@@ -20,10 +20,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const rokSelect = document.getElementById("rokSelect");
   const aktualniRok = new Date().getFullYear();
   rokSelect.value = aktualniRok;
+  mesicSelect.value = new Date().getMonth(); // 0–11
 
   await zobrazGrafyZaRok(aktualniRok);
 
   rokSelect.addEventListener("change", async () => {
+    await zobrazGrafyZaRok(parseInt(rokSelect.value));
+  });
+
+  mesicSelect.addEventListener("change", async () => {
     await zobrazGrafyZaRok(parseInt(rokSelect.value));
   });
 });
@@ -33,6 +38,9 @@ async function zobrazGrafyZaRok(rok) {
   const ostatniMap = {};
   const statistiky = {};
 
+  const mesicSelect = document.getElementById("mesicSelect");
+  const vybranyMesic = parseInt(mesicSelect.value); // 0–11
+
   const snapshot = await db.collection("sales").get();
 
   snapshot.forEach(doc => {
@@ -40,14 +48,14 @@ async function zobrazGrafyZaRok(rok) {
     const datum = new Date(data.datum);
     if (isNaN(datum) || datum.getFullYear() !== rok) return;
 
-    // Tržby
+    // Tržby (nezávisle na měsíci)
     const mesicKey = `${datum.getFullYear()}-${String(datum.getMonth() + 1).padStart(2, '0')}`;
     const cil = data.typ === "others" ? ostatniMap : firmyMap;
     if (!cil[mesicKey]) cil[mesicKey] = 0;
     cil[mesicKey] += Number(data.castka);
 
-    // Zmrzliny
-    if (Array.isArray(data.zmrzliny)) {
+    // Zmrzliny – jen pokud odpovídá měsíc
+    if (datum.getMonth() === vybranyMesic && Array.isArray(data.zmrzliny)) {
       data.zmrzliny.forEach(z => {
         const typ = z.typBaleni;
         const prichut = z.prichut;
