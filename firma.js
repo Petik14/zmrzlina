@@ -97,8 +97,8 @@ async function nactiFirmy() {
         <td>${firma.adresa /*== null ? "" : firma.adresa*/}</td>
         <td>${firma.suma} Kč</td>
         <td>
-          <button onclick="zobrazEditFormFirma('${firma.id}', '${firma.nazev}', '${firma.typ}')"style="font-size: 30px">✏️</button>
-          <button onclick="smazFirmu('${firma.id}')"style="font-size: 30px">🗑️</button>
+          <button onclick="zobrazEditFormFirma('${firma.id}', '${firma.nazev}', '${firma.typ}')"style="font-size: 20px">✏️</button>
+          <button onclick="smazFirmu('${firma.id}')"style="font-size: 20px">🗑️</button>
         </td>
       `;
     tbody.appendChild(tr);
