@@ -18,6 +18,8 @@ document.getElementById("formular").addEventListener("submit", async function (e
   const name = document.getElementById("idName").value.trim();
   const typ = document.querySelector('input[name="type"]:checked')?.value;
   const editId = document.getElementById("editIdFirma").value;
+  const adresa = document.getElementById("idAdresa").value.trim();
+
 
   if (!name || !typ) {
     document.getElementById("stav").innerText = "Vyplň všechny údaje.";
@@ -28,24 +30,28 @@ document.getElementById("formular").addEventListener("submit", async function (e
     if (editId) {
       await db.collection("companies").doc(editId).update({
         nazev: name,
+        adresa: adresa,
         typ: typ
       });
-      document.getElementById("stav").innerText = "Firma upravena ✅";
+      alert(`Firma "${name}" byla upravena.`);
     } else {
       await db.collection("companies").add({
         nazev: name,
+        adresa: adresa,
         typ: typ
       });
-      document.getElementById("stav").innerText = "Firma přidána ✅";
+      alert(`Firma "${name}" byla přidána.`);
     }
-
+  
     document.getElementById("formular").reset();
     document.getElementById("editIdFirma").value = "";
-    nactiFirmy();
+  
+    await nactiFirmy(); // ✅ počkej na nové načtení dat
   } catch (e) {
-    document.getElementById("stav").innerText = "Chyba při ukládání ❌";
     console.error("Chyba:", e);
+    document.getElementById("stav").innerText = "Chyba při ukládání ❌";
   }
+  
 });
 
 // 🧾 Načtení firem a tržeb
@@ -72,6 +78,7 @@ async function nactiFirmy() {
       id: doc.id,
       nazev: doc.data().nazev,
       typ: doc.data().typ,
+      adresa: doc.data().adresa || "",
       suma: soucty[doc.id] || 0
     });
   });
@@ -87,6 +94,7 @@ async function nactiFirmy() {
       <a href="#" onclick="zobrazDetailFirmy('${firma.id}', '${firma.nazev}')">${firma.nazev}</a>
      </td>
         <td>${firma.typ}</td>
+        <td>${firma.adresa /*== null ? "" : firma.adresa*/}</td>
         <td>${firma.suma} Kč</td>
         <td>
           <button onclick="zobrazEditFormFirma('${firma.id}', '${firma.nazev}', '${firma.typ}')"style="font-size: 30px">✏️</button>
@@ -106,10 +114,23 @@ async function nactiFirmy() {
 }
 
 // ✏️ Předvyplnění formuláře při úpravě
-function zobrazEditFormFirma(id, nazev, typ) {
+async function zobrazEditFormFirma(id, nazev, typ) {
+  alert(`Upravuješ firmu: ${nazev}`);
+
   document.getElementById("editIdFirma").value = id;
   document.getElementById("idName").value = nazev;
   document.getElementById(`id${typ}`).checked = true;
+
+  // ✅ Předvyplníme adresu přes await
+  try {
+    const doc = await db.collection("companies").doc(id).get();
+    if (doc.exists) {
+      const data = doc.data();
+      document.getElementById("idAdresa").value = data.adresa || "";
+    }
+  } catch (e) {
+    console.error("Chyba při načítání firmy:", e);
+  }
 }
 
 // 🗑️ Smazání firmy
