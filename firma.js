@@ -91,10 +91,9 @@ async function nactiFirmy() {
     tr.innerHTML = `
         <td>${index + 1}</td>
       <td>
-      <a href="#" onclick="zobrazDetailFirmy('${firma.id}', '${firma.nazev}')">${firma.nazev}</a>
+      <a href="#" onclick="zobrazDetailFirmy('${firma.id}', '${firma.nazev}')">${firma.nazev} <br> <p style = 'color: purple;margin:0;'>${firma.adresa}</p></a>
      </td>
         <td>${firma.typ}</td>
-        <td>${firma.adresa /*== null ? "" : firma.adresa*/}</td>
         <td>${firma.suma} Kč</td>
         <td>
           <button onclick="zobrazEditFormFirma('${firma.id}', '${firma.nazev}', '${firma.typ}')"style="font-size: 20px">✏️</button>

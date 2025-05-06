@@ -52,8 +52,7 @@ async function nactiJednotlivce() {
     tr.classList.add("jednotlivec");
     tr.innerHTML = `
       <td>${index + 1}</td>
-      <td><a href="#" onclick="zobrazDetailJednotlivce('${item.id}', '${item.nazev}')">${item.nazev}</a></td>
-      <td>${item.adresa}</td>
+      <td><a href="#" onclick="zobrazDetailJednotlivce('${item.id}', '${item.nazev}')">${item.nazev} <br><p style='color:purple;'>${item.adresa}</p></a></td>
       <td>${item.suma} Kč</td>
       <td>
         <button onclick="zobrazEditForm('${item.id}', '${item.nazev}')">✏️</button>
