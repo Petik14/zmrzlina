@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Přihlášení</title>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+
+  <script>
+    // Firebase konfigurace
+    const firebaseConfig = {
+      apiKey: "AIzaSyAWfXwkMWJTNDs-jPQSpDGJcGItOYcq5iQ",
+      authDomain: "bohemilk-61bfe.firebaseapp.com",
+      projectId: "bohemilk-61bfe",
+      storageBucket: "bohemilk-61bfe.appspot.com",
+      messagingSenderId: "549481770450",
+      appId: "1:549481770450:web:7a08ebc79a5a56e338ec0b",
+      measurementId: "G-BBJTQZCQRF"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    function prihlasSe() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithPopup(provider)
+        .then(() => {
+          window.location.href = "index.html"; // Po přihlášení se přesměruj
+        })
+        .catch((error) => {
+          alert("Chyba při přihlášení: " + error.message);
+        });
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 50px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Přihlášení do aplikace</h1>
+  <p>Pro přístup se přihlas pomocí Google účtu:</p>
+  <button onclick="prihlasSe()">Přihlásit se Google účtem</button>
+</body>
+</html>

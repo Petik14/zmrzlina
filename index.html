@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
   <meta charset="UTF-8">
   <title>Evidence zmrzlin</title>
@@ -8,6 +9,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <header>
     <nav>
@@ -18,6 +20,8 @@
   </header>
 
   <main class="container">
+    <button onclick="firebase.auth().signOut()">Odhlásit</button>
+
     <h1>Přidat položku</h1>
 
     <form id="trzbaForm">
@@ -81,5 +85,17 @@
   <script src="druhy.js"></script>
   <script src="zaloha.js"></script>
 
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+  <script>
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) {
+        alert("Přístup pouze pro přihlášené.");
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+
+
 </body>
+
 </html>
