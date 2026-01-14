@@ -61,9 +61,13 @@ async function nactiFirmy() {
 
   const trzbySnapshot = await db.collection("sales").get();
   const soucty = {};
+  const aktualniRok = new Date().getFullYear(); // např. 2026
 
   trzbySnapshot.forEach((doc) => {
     const data = doc.data();
+    const rok = new Date(data.datum).getFullYear();
+    if (rok !== aktualniRok) return; // ⛔️ přeskoč záznamy mimo aktuální rok
+
     if (!soucty[data.firmaId]) {
       soucty[data.firmaId] = 0;
     }
@@ -152,28 +156,39 @@ function formatujDatum(datumString) {
   const rok = d.getFullYear();
   return `${den}. ${mesic}. ${rok}`;
 }
+
 async function zobrazDetailFirmy(firmaId, nazevFirmy) {
   const dotaz = await db.collection("sales")
     .where("firmaId", "==", firmaId)
     .orderBy("datum", "desc")
     .get();
 
+  const aktualniRok = new Date().getFullYear(); // např. 2026
+
   if (dotaz.empty) {
     document.getElementById("obsahDialogu").innerText = `Firma: ${nazevFirmy}\nNemá žádné záznamy.`;
   } else {
-    let text = `Firma: ${nazevFirmy}\nZáznamy:\n`;
+    let text = `Firma: ${nazevFirmy}\nZáznamy za rok ${aktualniRok}:\n`;
     let celkem = 0;
     let pocet = 0;
 
     dotaz.forEach(doc => {
       const data = doc.data();
+      const rok = new Date(data.datum).getFullYear();
+      if (rok !== aktualniRok) return; // ⛔️ přeskoč neaktuální roky
+
       const datum = formatujDatum(data.datum);
       celkem += Number(data.castka);
       pocet++;
       text += `• ${datum} – ${data.castka} Kč\n`;
     });
 
-    text += `\nPočet položek: ${pocet}\nCelkem: ${celkem} Kč`;
+    if (pocet === 0) {
+      text += `Žádné záznamy za tento rok.`;
+    } else {
+      text += `\nPočet položek: ${pocet}\nCelkem: ${celkem} Kč`;
+    }
+
     document.getElementById("obsahDialogu").innerText = text;
   }
 
