@@ -55,8 +55,7 @@ async function zobrazGrafyZaRok(rok) {
     cil[mesicKey] += Number(data.castka);
 
     // Zmrzliny – jen pokud odpovídá měsíc
-   if (datum.getFullYear() === rok && datum.getMonth() === vybranyMesic && Array.isArray(data.zmrzliny)) {
-
+    if (datum.getMonth() === vybranyMesic && Array.isArray(data.zmrzliny)) {
       data.zmrzliny.forEach(z => {
         const typ = z.typBaleni;
         const prichut = z.prichut;
