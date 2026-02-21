@@ -90,15 +90,9 @@ async function zobrazTrzby() {
 
   const trzbySnapshot = await db.collection("sales").orderBy("datum", "desc").get();
   let poradi = 1;
-  const aktualniRok = new Date().getFullYear(); // např. 2026
 
   trzbySnapshot.forEach(doc => {
     const data = doc.data();
-
-    // ⛔️ Přeskočíme, pokud záznam není z aktuálního roku
-    const rokZaznamu = new Date(data.datum).getFullYear();
-    if (rokZaznamu !== aktualniRok) return;
-
     const typ = data.typ || "companies";
     const nazev = typ === "others"
       ? (othersMap[data.firmaId] || "Neznámý jednotlivec")
@@ -126,7 +120,6 @@ async function zobrazTrzby() {
 
   document.getElementById("souhrnTrzby").innerText = `Záznamů: ${poradi - 1}`;
 }
-
 
 function formatujDatum(datumString) {
   const d = new Date(datumString);

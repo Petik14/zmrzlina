@@ -21,13 +21,10 @@ async function nactiJednotlivce() {
 
   const trzbySnapshot = await db.collection("sales").get();
   const soucty = {};
-  const aktualniRok = new Date().getFullYear(); // např. 2026
 
   trzbySnapshot.forEach((doc) => {
     const data = doc.data();
-    const rok = new Date(data.datum).getFullYear();
-
-    if (data.typ === "others" && rok === aktualniRok) {
+    if (data.typ === "others") {
       if (!soucty[data.firmaId]) soucty[data.firmaId] = 0;
       soucty[data.firmaId] += Number(data.castka);
     }
@@ -133,37 +130,34 @@ async function zobrazDetailJednotlivce(firmaId, nazev) {
   const dialog = document.getElementById("firmaDialog");
   const obsah = document.getElementById("obsahDialogu");
 
-  const aktualniRok = new Date().getFullYear(); // např. 2026
-
   if (dotaz.empty) {
     obsah.innerText = `Odběratel: ${nazev}\nNemá žádné záznamy.`;
   } else {
-    let text = `Odběratel: ${nazev}\nZáznamy za rok ${aktualniRok}:\n`;
+    let text = `Odběratel: ${nazev}\nZáznamy:\n`;
     let celkem = 0;
     let pocet = 0;
 
     dotaz.forEach(doc => {
       const data = doc.data();
-      const rok = new Date(data.datum).getFullYear();
-      if (rok !== aktualniRok) return;
-
       const datum = formatujDatum(data.datum);
       celkem += Number(data.castka);
       pocet++;
       text += `• ${datum} – ${data.castka} Kč\n`;
     });
 
-    if (pocet === 0) {
-      text += `Žádné záznamy za tento rok.`;
-    } else {
-      text += `\nPočet položek: ${pocet}\nCelkem: ${celkem} Kč`;
-    }
-
+    text += `\nPočet položek: ${pocet}\nCelkem: ${celkem} Kč`;
     obsah.innerText = text;
   }
 
   dialog.showModal();
 }
 
+function formatujDatum(datumString) {
+  const d = new Date(datumString);
+  const den = String(d.getDate()).padStart(2, '0');
+  const mesic = String(d.getMonth() + 1).padStart(2, '0');
+  const rok = d.getFullYear();
+  return `${den}. ${mesic}. ${rok}`;
+}
 
 window.zobrazDetailJednotlivce = zobrazDetailJednotlivce;
