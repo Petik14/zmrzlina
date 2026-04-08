@@ -53,16 +53,11 @@ async function zobrazGrafyZaRok(rok) {
   const statistiky = {};
   const statistikyOdberatele = {};
 
-  const mesicSelect = document.getElementById("mesicSelect");
-  const vybranyMesic = mesicSelect ? parseInt(mesicSelect.value) : new Date().getMonth();
-
-  // názvy firem
   const companiesSnapshot = await db.collection("companies").get();
   companiesSnapshot.forEach(doc => {
     firmyNazvy[doc.id] = doc.data().nazev;
   });
 
-  // názvy ostatních odběratelů
   const othersSnapshot = await db.collection("others").get();
   othersSnapshot.forEach(doc => {
     ostatniNazvy[doc.id] = doc.data().nazev;
@@ -76,26 +71,24 @@ async function zobrazGrafyZaRok(rok) {
 
     if (isNaN(datum) || datum.getFullYear() !== rok) return;
 
-    // 1) Tržby za celý rok
+    // graf tržeb po měsících
     const mesicKey = `${datum.getFullYear()}-${String(datum.getMonth() + 1).padStart(2, "0")}`;
     const cil = data.typ === "others" ? ostatniMap : firmyMap;
 
     if (!cil[mesicKey]) cil[mesicKey] = 0;
     cil[mesicKey] += Number(data.castka);
 
-    // 2) Statistiky zmrzlin jen pro vybraný měsíc
-    if (datum.getMonth() === vybranyMesic && Array.isArray(data.zmrzliny)) {
+    // zmrzliny za celý rok
+    if (Array.isArray(data.zmrzliny)) {
       data.zmrzliny.forEach(z => {
         const typ = z.typBaleni;
         const prichut = z.prichut;
         const pocet = Number(z.pocet) || 0;
 
-        // původní statistiky pro grafy
         if (!statistiky[typ]) statistiky[typ] = {};
         if (!statistiky[typ][prichut]) statistiky[typ][prichut] = 0;
         statistiky[typ][prichut] += pocet;
 
-        // nová statistika podle odběratele
         const nazevOdberatele = data.typ === "others"
           ? (ostatniNazvy[data.firmaId] || "Neznámý odběratel")
           : (firmyNazvy[data.firmaId] || "Neznámá firma");
@@ -118,7 +111,6 @@ async function zobrazGrafyZaRok(rok) {
     }
   });
 
-  // 3) Graf měsíčních tržeb
   const vsechnyMesice = Array.from(new Set([...Object.keys(firmyMap), ...Object.keys(ostatniMap)]));
   vsechnyMesice.sort();
 
@@ -170,7 +162,6 @@ async function zobrazGrafyZaRok(rok) {
     }
   });
 
-  // 4) Grafy příchutí podle typu balení
   const typy = [
     "120 ml",
     "460 ml",
@@ -209,7 +200,7 @@ async function zobrazGrafyZaRok(rok) {
           legend: { display: false },
           title: {
             display: true,
-            text: `Nejoblíbenější příchutě – ${typ}`
+            text: `Nejoblíbenější příchutě za rok ${rok} – ${typ}`
           }
         },
         scales: {
@@ -219,7 +210,6 @@ async function zobrazGrafyZaRok(rok) {
     });
   });
 
-  // 5) Původní tabulka vítězů
   const rows = [];
   for (const typ in statistiky) {
     for (const prichut in statistiky[typ]) {
@@ -258,22 +248,15 @@ async function zobrazGrafyZaRok(rok) {
     tabulkaBody.appendChild(soucetTr);
   }
 
-  // 6) Nová tabulka odběratelů
   const odberateleBody = document.querySelector("#odberateleTabulka tbody");
   if (odberateleBody) {
     odberateleBody.innerHTML = "";
 
     const radkyOdberatele = Object.values(statistikyOdberatele);
 
-    radkyOdberatele.sort((a, b) => {
-      if (a.odberatel < b.odberatel) return -1;
-      if (a.odberatel > b.odberatel) return 1;
-      if (a.typBaleni < b.typBaleni) return -1;
-      if (a.typBaleni > b.typBaleni) return 1;
-      if (a.prichut < b.prichut) return -1;
-      if (a.prichut > b.prichut) return 1;
-      return 0;
-    });
+
+    radkyOdberatele.sort((a,b) => b.pocet - a.pocet);
+  
 
     radkyOdberatele.forEach(row => {
       const tr = document.createElement("tr");
