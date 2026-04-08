@@ -18,57 +18,107 @@ const MESICE_TEXT = [
 
 document.addEventListener("DOMContentLoaded", async () => {
   const rokSelect = document.getElementById("rokSelect");
+  const mesicSelect = document.getElementById("mesicSelect");
   const aktualniRok = new Date().getFullYear();
-  rokSelect.value = aktualniRok;
-  mesicSelect.value = new Date().getMonth(); // 0–11
+
+  if (rokSelect) {
+    rokSelect.value = aktualniRok;
+  }
+
+  if (mesicSelect) {
+    mesicSelect.value = new Date().getMonth(); // 0–11
+  }
 
   await zobrazGrafyZaRok(aktualniRok);
 
-  rokSelect.addEventListener("change", async () => {
-    await zobrazGrafyZaRok(parseInt(rokSelect.value));
-  });
+  if (rokSelect) {
+    rokSelect.addEventListener("change", async () => {
+      await zobrazGrafyZaRok(parseInt(rokSelect.value));
+    });
+  }
 
-  mesicSelect.addEventListener("change", async () => {
-    await zobrazGrafyZaRok(parseInt(rokSelect.value));
-  });
+  if (mesicSelect) {
+    mesicSelect.addEventListener("change", async () => {
+      await zobrazGrafyZaRok(parseInt(rokSelect.value));
+    });
+  }
 });
 
 async function zobrazGrafyZaRok(rok) {
+  const firmyNazvy = {};
+  const ostatniNazvy = {};
+
   const firmyMap = {};
   const ostatniMap = {};
   const statistiky = {};
+  const statistikyOdberatele = {};
 
   const mesicSelect = document.getElementById("mesicSelect");
-  const vybranyMesic = parseInt(mesicSelect.value); // 0–11
+  const vybranyMesic = mesicSelect ? parseInt(mesicSelect.value) : new Date().getMonth();
+
+  // názvy firem
+  const companiesSnapshot = await db.collection("companies").get();
+  companiesSnapshot.forEach(doc => {
+    firmyNazvy[doc.id] = doc.data().nazev;
+  });
+
+  // názvy ostatních odběratelů
+  const othersSnapshot = await db.collection("others").get();
+  othersSnapshot.forEach(doc => {
+    ostatniNazvy[doc.id] = doc.data().nazev;
+  });
 
   const snapshot = await db.collection("sales").get();
 
   snapshot.forEach(doc => {
     const data = doc.data();
     const datum = new Date(data.datum);
+
     if (isNaN(datum) || datum.getFullYear() !== rok) return;
 
-    // Tržby (nezávisle na měsíci)
-    const mesicKey = `${datum.getFullYear()}-${String(datum.getMonth() + 1).padStart(2, '0')}`;
+    // 1) Tržby za celý rok
+    const mesicKey = `${datum.getFullYear()}-${String(datum.getMonth() + 1).padStart(2, "0")}`;
     const cil = data.typ === "others" ? ostatniMap : firmyMap;
+
     if (!cil[mesicKey]) cil[mesicKey] = 0;
     cil[mesicKey] += Number(data.castka);
 
-    // Zmrzliny – jen pokud odpovídá měsíc
+    // 2) Statistiky zmrzlin jen pro vybraný měsíc
     if (datum.getMonth() === vybranyMesic && Array.isArray(data.zmrzliny)) {
       data.zmrzliny.forEach(z => {
         const typ = z.typBaleni;
         const prichut = z.prichut;
-        const pocet = z.pocet;
+        const pocet = Number(z.pocet) || 0;
 
+        // původní statistiky pro grafy
         if (!statistiky[typ]) statistiky[typ] = {};
         if (!statistiky[typ][prichut]) statistiky[typ][prichut] = 0;
         statistiky[typ][prichut] += pocet;
+
+        // nová statistika podle odběratele
+        const nazevOdberatele = data.typ === "others"
+          ? (ostatniNazvy[data.firmaId] || "Neznámý odběratel")
+          : (firmyNazvy[data.firmaId] || "Neznámá firma");
+
+        const typOdberatele = data.typ === "others" ? "Ostatní" : "Firma";
+        const klic = `${nazevOdberatele}|||${typOdberatele}|||${typ}|||${prichut}`;
+
+        if (!statistikyOdberatele[klic]) {
+          statistikyOdberatele[klic] = {
+            odberatel: nazevOdberatele,
+            typOdberatele: typOdberatele,
+            typBaleni: typ,
+            prichut: prichut,
+            pocet: 0
+          };
+        }
+
+        statistikyOdberatele[klic].pocet += pocet;
       });
     }
   });
 
-  // Vygeneruj graf tržeb
+  // 3) Graf měsíčních tržeb
   const vsechnyMesice = Array.from(new Set([...Object.keys(firmyMap), ...Object.keys(ostatniMap)]));
   vsechnyMesice.sort();
 
@@ -83,20 +133,21 @@ async function zobrazGrafyZaRok(rok) {
 
   const ctx = document.getElementById("grafTrzeb").getContext("2d");
   if (window.grafTrzebInstance) window.grafTrzebInstance.destroy();
+
   window.grafTrzebInstance = new Chart(ctx, {
-    type: 'bar',
+    type: "bar",
     data: {
       labels: labels,
       datasets: [
         {
-          label: 'Firmy',
+          label: "Firmy",
           data: firmyData,
-          backgroundColor: 'rgba(54, 162, 235, 0.6)'
+          backgroundColor: "rgba(54, 162, 235, 0.6)"
         },
         {
-          label: 'Ostatní odběratelé',
+          label: "Ostatní odběratelé",
           data: ostatniData,
-          backgroundColor: 'rgba(255, 206, 86, 0.6)'
+          backgroundColor: "rgba(255, 206, 86, 0.6)"
         }
       ]
     },
@@ -112,14 +163,14 @@ async function zobrazGrafyZaRok(rok) {
         y: {
           beginAtZero: true,
           ticks: {
-            callback: value => value + ' Kč'
+            callback: value => value + " Kč"
           }
         }
       }
     }
   });
 
-  // Vygeneruj zmrzlinové grafy
+  // 4) Grafy příchutí podle typu balení
   const typy = [
     "120 ml",
     "460 ml",
@@ -138,7 +189,9 @@ async function zobrazGrafyZaRok(rok) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
 
-    if (window[`chart_${canvasId}`]) window[`chart_${canvasId}`].destroy();
+    if (window[`chart_${canvasId}`]) {
+      window[`chart_${canvasId}`].destroy();
+    }
 
     window[`chart_${canvasId}`] = new Chart(canvas, {
       type: "bar",
@@ -166,8 +219,7 @@ async function zobrazGrafyZaRok(rok) {
     });
   });
 
-  // Vyplníme tabulku
-  // Připravíme řádky do tabulky
+  // 5) Původní tabulka vítězů
   const rows = [];
   for (const typ in statistiky) {
     for (const prichut in statistiky[typ]) {
@@ -179,31 +231,60 @@ async function zobrazGrafyZaRok(rok) {
     }
   }
 
-  // Seřadíme od nejprodávanější
   rows.sort((a, b) => b.pocet - a.pocet);
 
-  // Vyplníme tabulku
   const tabulkaBody = document.querySelector("#vitezoveTabulka tbody");
-  tabulkaBody.innerHTML = "";
+  if (tabulkaBody) {
+    tabulkaBody.innerHTML = "";
 
-  let celkem = 0;
+    let celkem = 0;
 
-  rows.forEach(row => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-    <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.typ}</td>
-    <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.prichut}</td>
-    <td style="padding: 6px 10px; border-bottom: 1px solid #ccc; text-align: right;">${row.pocet}</td>
-  `;
-    tabulkaBody.appendChild(tr);
-    celkem += row.pocet;
-  });
+    rows.forEach(row => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.typ}</td>
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.prichut}</td>
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc; text-align: right;">${row.pocet}</td>
+      `;
+      tabulkaBody.appendChild(tr);
+      celkem += row.pocet;
+    });
 
-  // Přidáme součtový řádek
-  const soucetTr = document.createElement("tr");
-  soucetTr.innerHTML = `
-  <td colspan="2" style="padding: 10px; font-weight: bold; border-top: 2px solid #000;">Podtrženo, sečteno:</td>
-  <td style="padding: 10px; font-weight: bold; border-top: 2px solid #000; text-align: right;">${celkem}</td>
-`;
-  tabulkaBody.appendChild(soucetTr);
+    const soucetTr = document.createElement("tr");
+    soucetTr.innerHTML = `
+      <td colspan="2" style="padding: 10px; font-weight: bold; border-top: 2px solid #000;">Podtrženo, sečteno:</td>
+      <td style="padding: 10px; font-weight: bold; border-top: 2px solid #000; text-align: right;">${celkem}</td>
+    `;
+    tabulkaBody.appendChild(soucetTr);
+  }
+
+  // 6) Nová tabulka odběratelů
+  const odberateleBody = document.querySelector("#odberateleTabulka tbody");
+  if (odberateleBody) {
+    odberateleBody.innerHTML = "";
+
+    const radkyOdberatele = Object.values(statistikyOdberatele);
+
+    radkyOdberatele.sort((a, b) => {
+      if (a.odberatel < b.odberatel) return -1;
+      if (a.odberatel > b.odberatel) return 1;
+      if (a.typBaleni < b.typBaleni) return -1;
+      if (a.typBaleni > b.typBaleni) return 1;
+      if (a.prichut < b.prichut) return -1;
+      if (a.prichut > b.prichut) return 1;
+      return 0;
+    });
+
+    radkyOdberatele.forEach(row => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.odberatel}</td>
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.typOdberatele}</td>
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.typBaleni}</td>
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.prichut}</td>
+        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc; text-align: right;">${row.pocet}</td>
+      `;
+      odberateleBody.appendChild(tr);
+    });
+  }
 }
