@@ -47,4 +47,98 @@ body {
       font-size: 1.1rem;
     }
   }
+
+  #odberateleKarticky {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.odberatel-karta {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.odberatel-karta summary {
+  cursor: pointer;
+  padding: 14px 16px;
+  font-weight: bold;
+  list-style: none;
+  background: #f5f5f5;
+}
+
+.odberatel-karta summary::-webkit-details-marker {
+  display: none;
+}
+
+.odberatel-hlavicka {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.odberatel-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.odberatel-typ {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: normal;
+}
+
+.odberatel-celkem {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.odberatel-obsah {
+  padding: 12px 16px 16px 16px;
+}
+
+.odberatel-polozka {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.odberatel-karta.firma summary{
+  background-color: #cceeff;
+}
+
+.odberatel-karta.ostatni summary{
+  background-color: #ffe6e6;
+}
+
+
+.odberatel-polozka:last-child {
+  border-bottom: none;
+}
+
+.odberatel-vlevo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.odberatel-baleni {
+  font-weight: 600;
+}
+
+.odberatel-prichut {
+  color: #555;
+}
+
+.odberatel-pocet {
+  font-weight: bold;
+  white-space: nowrap;
+}
   

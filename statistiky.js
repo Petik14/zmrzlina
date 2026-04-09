@@ -248,26 +248,78 @@ async function zobrazGrafyZaRok(rok) {
     tabulkaBody.appendChild(soucetTr);
   }
 
-  const odberateleBody = document.querySelector("#odberateleTabulka tbody");
-  if (odberateleBody) {
-    odberateleBody.innerHTML = "";
+  const odberateleBox = document.getElementById("odberateleKarticky");
+  if (odberateleBox) {
+    odberateleBox.innerHTML = "";
 
-    const radkyOdberatele = Object.values(statistikyOdberatele);
+    const seskupeni = {};
 
+    Object.values(statistikyOdberatele).forEach(row => {
+      const klic = `${row.odberatel}|||${row.typOdberatele}`;
 
-    radkyOdberatele.sort((a,b) => b.pocet - a.pocet);
-  
+      if (!seskupeni[klic]) {
+        seskupeni[klic] = {
+          odberatel: row.odberatel,
+          typOdberatele: row.typOdberatele,
+          celkem: 0,
+          polozky: []
+        };
+      }
 
-    radkyOdberatele.forEach(row => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.odberatel}</td>
-        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.typOdberatele}</td>
-        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.typBaleni}</td>
-        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc;">${row.prichut}</td>
-        <td style="padding: 6px 10px; border-bottom: 1px solid #ccc; text-align: right;">${row.pocet}</td>
+      seskupeni[klic].polozky.push({
+        typBaleni: row.typBaleni,
+        prichut: row.prichut,
+        pocet: row.pocet
+      });
+
+      seskupeni[klic].celkem += row.pocet;
+    });
+
+    const karty = Object.values(seskupeni);
+
+    // seřazení odběratelů podle celkového počtu kusů
+    karty.sort((a, b) => b.celkem - a.celkem);
+
+    karty.forEach(karta => {
+      // seřazení položek uvnitř karty podle kusů
+      karta.polozky.sort((a, b) => b.pocet - a.pocet);
+
+      const details = document.createElement("details");
+      details.className = `odberatel-karta ${
+        karta.typOdberatele === "Firma" ?
+        "firma" : "ostatni"
+      }`;
+
+      const summary = document.createElement("summary");
+      summary.innerHTML = `
+      <div class="odberatel-hlavicka">
+        <div class="odberatel-info">
+          <span>${karta.odberatel}</span>
+          <span class="odberatel-typ">${karta.typOdberatele}</span>
+        </div>
+        <div class="odberatel-celkem">${karta.celkem} ks</div>
+      </div>
+    `;
+
+      const obsah = document.createElement("div");
+      obsah.className = "odberatel-obsah";
+
+      karta.polozky.forEach(polozka => {
+        const radek = document.createElement("div");
+        radek.className = "odberatel-polozka";
+        radek.innerHTML = `
+        <div class="odberatel-vlevo">
+          <div class="odberatel-baleni">${polozka.typBaleni}</div>
+          <div class="odberatel-prichut">${polozka.prichut}</div>
+        </div>
+        <div class="odberatel-pocet">${polozka.pocet} ks</div>
       `;
-      odberateleBody.appendChild(tr);
+        obsah.appendChild(radek);
+      });
+
+      details.appendChild(summary);
+      details.appendChild(obsah);
+      odberateleBox.appendChild(details);
     });
   }
 }
